@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="resourcewatch">
+  <schema id="org.gnome.shell.extensions.resourcewatch"
+          path="/org/gnome/shell/extensions/resourcewatch/">
+
+    <key name="poll-interval" type="i">
+      <default>2</default>
+      <summary>Yenileme aralığı (saniye)</summary>
+      <description>Sistem metriklerinin ne sıklıkla okunacağı. Düşük değer daha güncel veri, daha fazla kaynak tüketimi demektir.</description>
+    </key>
+
+    <key name="show-cpu" type="b">
+      <default>true</default>
+      <summary>Panelde CPU göster</summary>
+    </key>
+
+    <key name="show-ram" type="b">
+      <default>true</default>
+      <summary>Panelde RAM göster</summary>
+    </key>
+
+    <key name="show-sparkline" type="b">
+      <default>true</default>
+      <summary>Panelde CPU sparkline grafiği göster</summary>
+    </key>
+
+    <key name="show-temperature" type="b">
+      <default>false</default>
+      <summary>Panelde sıcaklık göster</summary>
+      <description>Faz 3'te aktif olacak; donanım desteklemiyorsa otomatik gizlenir.</description>
+    </key>
+
+    <key name="show-process-list" type="b">
+      <default>true</default>
+      <summary>Dropdown menüde process listesini göster</summary>
+      <description>Kapatılırsa en çok CPU/RAM tüketen process'ler ve takılı/zombie uyarısı gizlenir; process taraması da tamamen durur (küçük bir performans kazancı sağlar).</description>
+    </key>
+
+    <key name="show-process-pid" type="b">
+      <default>false</default>
+      <summary>Process satırlarında PID numarasını göster</summary>
+      <description>Kapalıyken sadece process adı ve kaynak kullanımı gösterilir, PID numarası gizlenir.</description>
+    </key>
+
+    <key name="show-gpu" type="b">
+      <default>false</default>
+      <summary>Panelde GPU kullanım ve sıcaklığını göster</summary>
+      <description>AMD/Radeon/Nouveau sürücülerde doğrudan, NVIDIA'da nvidia-smi kuruluysa onun üzerinden okunur. Donanım/sürücü desteklemiyorsa otomatik gizlenir.</description>
+    </key>
+
+    <key name="show-network" type="b">
+      <default>false</default>
+      <summary>Panelde indirme/yükleme hızını göster</summary>
+      <description>/proc/net/dev üzerinden tüm ağ arayüzlerinin (loopback hariç) toplam anlık indirme ve yükleme hızı.</description>
+    </key>
+
+  </schema>
+</schemalist>

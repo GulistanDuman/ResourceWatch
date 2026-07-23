@@ -5,53 +5,53 @@
 
     <key name="poll-interval" type="i">
       <default>2</default>
-      <summary>Yenileme aralığı (saniye)</summary>
-      <description>Sistem metriklerinin ne sıklıkla okunacağı. Düşük değer daha güncel veri, daha fazla kaynak tüketimi demektir.</description>
+      <summary>Refresh interval (seconds)</summary>
+      <description>How often system metrics are read. A lower value means more up-to-date data and higher resource consumption.</description>
     </key>
 
     <key name="show-cpu" type="b">
       <default>true</default>
-      <summary>Panelde CPU göster</summary>
+      <summary>Show CPU on panel</summary>
     </key>
 
     <key name="show-ram" type="b">
       <default>true</default>
-      <summary>Panelde RAM göster</summary>
+      <summary>Show RAM on panel</summary>
     </key>
 
     <key name="show-sparkline" type="b">
       <default>true</default>
-      <summary>Panelde CPU sparkline grafiği göster</summary>
+      <summary>Show CPU sparkline graph on panel</summary>
     </key>
 
     <key name="show-temperature" type="b">
       <default>false</default>
-      <summary>Panelde sıcaklık göster</summary>
-      <description>Faz 3'te aktif olacak; donanım desteklemiyorsa otomatik gizlenir.</description>
+      <summary>Show temperature on panel</summary>
+      <description>Will be active in Phase 3; automatically hidden if hardware is not supported.</description>
     </key>
 
     <key name="show-process-list" type="b">
       <default>true</default>
-      <summary>Dropdown menüde process listesini göster</summary>
-      <description>Kapatılırsa en çok CPU/RAM tüketen process'ler ve takılı/zombie uyarısı gizlenir; process taraması da tamamen durur (küçük bir performans kazancı sağlar).</description>
+      <summary>Show process list in dropdown menu</summary>
+      <description>If disabled, top CPU/RAM consuming processes and stuck/zombie warnings are hidden; process scanning also stops completely (provides a small performance gain).</description>
     </key>
 
     <key name="show-process-pid" type="b">
       <default>false</default>
-      <summary>Process satırlarında PID numarasını göster</summary>
-      <description>Kapalıyken sadece process adı ve kaynak kullanımı gösterilir, PID numarası gizlenir.</description>
+      <summary>Show PID number in process rows</summary>
+      <description>When disabled, only the process name and resource usage are displayed, and the PID number is hidden.</description>
     </key>
 
     <key name="show-gpu" type="b">
       <default>false</default>
-      <summary>Panelde GPU kullanım ve sıcaklığını göster</summary>
-      <description>AMD/Radeon/Nouveau sürücülerde doğrudan, NVIDIA'da nvidia-smi kuruluysa onun üzerinden okunur. Donanım/sürücü desteklemiyorsa otomatik gizlenir.</description>
+      <summary>Show GPU usage and temperature on panel</summary>
+      <description>Read directly on AMD/Radeon/Nouveau drivers, and via nvidia-smi on NVIDIA if installed. Automatically hidden if hardware/driver is not supported.</description>
     </key>
 
     <key name="show-network" type="b">
       <default>false</default>
-      <summary>Panelde indirme/yükleme hızını göster</summary>
-      <description>/proc/net/dev üzerinden tüm ağ arayüzlerinin (loopback hariç) toplam anlık indirme ve yükleme hızı.</description>
+      <summary>Show download/upload speed on panel</summary>
+      <description>Total instantaneous download and upload speed of all network interfaces (excluding loopback) via /proc/net/dev.</description>
     </key>
 
   </schema>

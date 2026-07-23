@@ -1,57 +1,59 @@
 # Resource Watch — GNOME Shell Extension
 
-Panelden çıkmadan CPU, RAM, sıcaklık ve process-level sistem kullanımını izleyen
-GNOME Shell extension'ı.
+A GNOME Shell extension that monitors CPU, RAM, temperature, and process-level system usage directly from the panel.
 
-## Özellikler
+## Features
 
-- Panelde canlı CPU% / RAM% / sıcaklık göstergesi, simgelerle ayrılmış
-- CPU geçmişini gösteren sparkline grafiği
-- Eşik bazlı renklendirme (normal → uyarı sarısı → kritik kırmızısı)
-- Dropdown menüde en çok CPU/RAM tüketen process'lerin listesi
-- Takılı (D) ve zombie (Z) process uyarısı
-- Ayarlanabilir panel görünümü ve yenileme hızı (Ayarlar penceresi)
-- `/sys/class/hwmon` (coretemp/k10temp) öncelikli, güvenilir sıcaklık okuma
-- İngilizce arayüz, gettext ile uluslararasılaştırmaya hazır
+* Live CPU% / RAM% / temperature indicator on the panel, separated by icons
+* Sparkline graph showing CPU history
+* Threshold-based coloring (normal $\rightarrow$ warning yellow $\rightarrow$ critical red)
+* List of top CPU/RAM-consuming processes in the dropdown menu
+* Warnings for stuck (D) and zombie (Z) processes
+* Adjustable panel appearance and refresh rate (Preferences window)
+* Reliable temperature reading prioritizing `/sys/class/hwmon` (coretemp/k10temp)
+* English interface, ready for internationalization using gettext
 
-## Kurulum (geliştirme/test için)
+## Installation (for development/testing)
 
 ```bash
-# 1. Extension klasörünü GNOME'un extension dizinine sembolik link ile bağla
+# 1. Symlink the extension folder to GNOME's extension directory
 ln -s $(pwd)/resourcewatch@gulistanduman.github.io ~/.local/share/gnome-shell/extensions/
 
-# 2. Şemayı derle
+# 2. Compile the schema
 glib-compile-schemas ~/.local/share/gnome-shell/extensions/resourcewatch@gulistanduman.github.io/schemas/
 
-# 3. Oturumu kapat / aç (kod dosyaları her değiştiğinde bu adım gerekir)
+# 3. Log out / log back in (this step is required whenever code files change)
 
-# 4. Extension'ı etkinleştir
+# 4. Enable the extension
 gnome-extensions enable resourcewatch@gulistanduman.github.io
+
 ```
 
-## Hata ayıklama
+## Debugging
 
 ```bash
 journalctl -f -o cat /usr/bin/gnome-shell
+
 ```
 
-## Proje yapısı
+## Project Structure
 
 ```
 resourcewatch@gulistanduman.github.io/
-  extension.js       # ana giriş noktası, panel widget'ı, polling
-  prefs.js            # ayarlar penceresi (Adwaita UI)
-  metadata.json        # GNOME Shell sürüm uyumluluğu bilgisi
+  extension.js        # main entry point, panel widget, polling
+  prefs.js            # preferences window (Adwaita UI)
+  metadata.json       # GNOME Shell version compatibility info
   lib/
-    cpu.js            # /proc/stat okuma ve hesaplama
+    cpu.js            # /proc/stat reading and calculation
     memory.js         # /proc/meminfo
-    processes.js      # /proc/[pid]/* tarama, en çok CPU/RAM tüketenler
-    thermal.js        # hwmon + thermal_zone fallback zinciri
-    thresholds.js      # eşik değerleri ve renk mantığı
+    processes.js      # /proc/[pid]/* scanning, top CPU/RAM consumers
+    thermal.js        # hwmon + thermal_zone fallback chain
+    thresholds.js     # threshold values and color logic
   schemas/
     org.gnome.shell.extensions.resourcewatch.gschema.xml
+
 ```
 
-## Lisans / Katkı
+## License / Contribution
 
-Ticari kaygı yok — açık kaynak, katkıya açık bir proje olarak geliştiriliyor.
+No commercial concerns — developed as an open-source project open to contributions.

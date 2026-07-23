@@ -16,14 +16,14 @@ import { readGpuTemperature, readGpuUsagePercent, readNvidiaStatsAsync } from '.
 import { NetworkUsageTracker, formatBytesPerSec } from './lib/network.js';
 import { severityFor, colorForSeverity } from './lib/thresholds.js';
 
-const PROCESS_POLL_INTERVAL_SECONDS = 5; // process taraması CPU/RAM'den daha pahalı, daha seyrek yapılır
-const GPU_POLL_INTERVAL_SECONDS = 5; // nvidia-smi bir subprocess başlattığı için CPU/RAM'den daha seyrek
+const PROCESS_POLL_INTERVAL_SECONDS = 5; // process scanning is more expensive than CPU/RAM, done less frequently
+const GPU_POLL_INTERVAL_SECONDS = 5; // less frequent than CPU/RAM since nvidia-smi spawns a subprocess
 const PROCESS_LIST_LENGTH = 5;
 const SPARKLINE_HISTORY_LENGTH = 30;
 const SPARKLINE_WIDTH = 60;
 const SPARKLINE_HEIGHT = 20;
 
-/** '#rrggbb' formatındaki bir rengi Cairo'nun beklediği 0-1 aralığındaki [r,g,b] dizisine çevirir */
+/** Converts a color in '#rrggbb' format to a Cairo-compatible [r,g,b] array in the 0-1 range */
 function hexToRgb01(hex) {
     const match = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
     if (!match)
@@ -31,7 +31,7 @@ function hexToRgb01(hex) {
     return [match[1], match[2], match[3]].map(v => parseInt(v, 16) / 255);
 }
 
-/** İki önem derecesinden daha "kötü" (dikkat gerektiren) olanı döner */
+/** Returns the "worse" (more attention-requiring) of two severity levels */
 function worseSeverity(a, b) {
     const rank = { normal: 0, warning: 1, critical: 2 };
     return rank[a] >= rank[b] ? a : b;
@@ -112,9 +112,10 @@ class SysMonitorIndicator extends PanelMenu.Button {
         this.menu.addMenuItem(this._gpuTempMenuItem);
         this.menu.addMenuItem(this._networkDownMenuItem);
         this.menu.addMenuItem(this._networkUpMenuItem);
-        // --- Process listesi bölümü: her öğe ayrı ayrı görünürlük dizisinde tutulur,
-        // çünkü PopupMenuSection'ın kendisi bir aktör değildir, .visible atamak
-        // hiçbir şeyi gizlemez — gerçek görünürlük alt öğelerde olmalı.
+
+        // --- Process list section: each item is kept separately in a visibility array,
+        // because PopupMenuSection itself is not an actor, assigning .visible
+        // hides nothing — actual visibility must be on the child items.
         this._processMenuItems = [];
 
         const addProcessItem = item => {
@@ -125,13 +126,13 @@ class SysMonitorIndicator extends PanelMenu.Button {
 
         addProcessItem(new PopupMenu.PopupSeparatorMenuItem());
 
-        // Dikkat gerektiren process'ler (D: disk bekliyor / Z: zombie)
+        // Processes requiring attention (D: waiting for disk / Z: zombie)
         this._attentionHeader = addProcessItem(new PopupMenu.PopupMenuItem(
             _('⚠ No stuck or zombie processes'), { reactive: false }));
 
         addProcessItem(new PopupMenu.PopupSeparatorMenuItem());
 
-        // En çok RAM tüketenler
+        // Top RAM consumers
         addProcessItem(new PopupMenu.PopupMenuItem(
             _('Top RAM-consuming processes'), { reactive: false, style_class: 'resourcewatch-section-title' }));
         this._ramProcessItems = [];
@@ -142,7 +143,7 @@ class SysMonitorIndicator extends PanelMenu.Button {
 
         addProcessItem(new PopupMenu.PopupSeparatorMenuItem());
 
-        // En çok CPU tüketenler
+        // Top CPU consumers
         addProcessItem(new PopupMenu.PopupMenuItem(
             _('Top CPU-consuming processes'), { reactive: false, style_class: 'resourcewatch-section-title' }));
         this._cpuProcessItems = [];
@@ -199,7 +200,7 @@ class SysMonitorIndicator extends PanelMenu.Button {
 
         if (this._showProcessList) {
             this._ensureProcessPolling();
-            this._pollProcesses(); // PID gösterimi gibi ayarlar değiştiğinde satırları hemen tazele
+            this._pollProcesses(); // Refresh rows immediately when settings like PID display change
         } else {
             this._stopProcessPolling();
         }
@@ -232,7 +233,7 @@ class SysMonitorIndicator extends PanelMenu.Button {
             this._ensureGpuPolling();
     }
 
-    /** Process taramasını başlatır (zaten çalışıyorsa bir şey yapmaz) */
+    /** Starts process scanning (does nothing if already running) */
     _ensureProcessPolling() {
         if (this._processTimeoutId)
             return;
@@ -255,7 +256,7 @@ class SysMonitorIndicator extends PanelMenu.Button {
         }
     }
 
-    /** GPU okumasını başlatır (zaten çalışıyorsa bir şey yapmaz) */
+    /** Starts GPU reading (does nothing if already running) */
     _ensureGpuPolling() {
         if (this._gpuTimeoutId)
             return;
@@ -279,7 +280,7 @@ class SysMonitorIndicator extends PanelMenu.Button {
     }
 
     _pollGpu() {
-        // Önce sysfs (AMD/Radeon/Nouveau) — hızlı, senkron, ek işlem başlatmaz
+        // First try sysfs (AMD/Radeon/Nouveau) — fast, synchronous, spawns no extra process
         const sysfsUsage = readGpuUsagePercent();
         const sysfsTemp = readGpuTemperature();
 
@@ -290,8 +291,8 @@ class SysMonitorIndicator extends PanelMenu.Button {
             return;
         }
 
-        // sysfs'te bulunamadı (örn. NVIDIA kapalı kaynak sürücü) — nvidia-smi dene.
-        // Aynı anda birden fazla sorgu çakışmasın diye basit bir kilit kullanıyoruz.
+        // Not found in sysfs (e.g. NVIDIA proprietary driver) — try nvidia-smi.
+        // Use a simple lock to prevent multiple queries from colliding simultaneously.
         if (this._gpuQueryInFlight)
             return;
         this._gpuQueryInFlight = true;
@@ -300,7 +301,7 @@ class SysMonitorIndicator extends PanelMenu.Button {
             this._gpuQueryInFlight = false;
 
             if (this._destroyed)
-                return; // extension bu sırada kapatılmış olabilir, güvenlik kontrolü
+                return; // extension might have been closed in the meantime, safety check
 
             if (result) {
                 this._gpuUsage = result.usage;
@@ -413,7 +414,7 @@ class SysMonitorIndicator extends PanelMenu.Button {
         this._networkUpMenuItem.label.set_text(`${_('Network ↑:')} ${upText ?? '—'}`);
     }
 
-    /** Etikete eşik durumuna göre renk uygular (normal durumda tema rengine döner) */
+    /** Applies color to the label based on the threshold status (reverts to theme color in normal state) */
     _applySeverityColor(label, severity) {
         const color = colorForSeverity(severity);
         label.set_style(color ? `color: ${color}; font-weight: bold;` : null);
@@ -464,7 +465,7 @@ class SysMonitorIndicator extends PanelMenu.Button {
     }
 
     destroy() {
-        this._destroyed = true; // async GPU callback'lerinin destroy sonrası çalışmasını önler
+        this._destroyed = true; // prevents async GPU callbacks from running after destroy
         this._stopPolling();
         if (this._settingsChangedId) {
             this._settings.disconnect(this._settingsChangedId);

@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js (for JS syntax validation)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check JavaScript syntax
+        run: |
+          for f in extension.js prefs.js lib/*.js; do
+            echo "Checking $f"
+            node --check "$f"
+          done
+
+      - name: Validate metadata.json
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('metadata.json', 'utf8')); console.log('metadata.json is valid JSON')"
+
+      - name: Install glib-compile-schemas
+        run: sudo apt-get update && sudo apt-get install -y libglib2.0-bin
+
+      - name: Compile and validate GSettings schema
+        run: |
+          glib-compile-schemas schemas/
+          rm schemas/gschemas.compiled
+          echo "Schema is valid"

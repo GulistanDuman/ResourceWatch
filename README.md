@@ -1,6 +1,6 @@
 # Resource Watch — GNOME Shell Extension
 
-A GNOME Shell extension that monitors CPU, RAM, temperature, and process-level system usage directly from the panel.
+A GNOME Shell extension that monitors CPU, GPU, RAM, temperature, and process-level system usage directly from the panel.
 
 ## Features
 

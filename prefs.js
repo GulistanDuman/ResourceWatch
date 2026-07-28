@@ -14,7 +14,7 @@ export default class SysMonitorPreferences extends ExtensionPreferences {
         });
         window.add(page);
 
-        // --- Panelde ne gösterilsin ---
+        // --- Panel Display ---
         const displayGroup = new Adw.PreferencesGroup({
             title: _('Panel Display'),
             description: _('Choose which metrics appear in the top panel'),
@@ -40,7 +40,7 @@ export default class SysMonitorPreferences extends ExtensionPreferences {
             _('Combined download/upload speed across all network interfaces (excluding loopback)')
         ));
 
-        // --- Process listesi ---
+        // --- Process List ---
         const processGroup = new Adw.PreferencesGroup({
             title: _('Process List'),
         });
@@ -58,7 +58,7 @@ export default class SysMonitorPreferences extends ExtensionPreferences {
             _('Adds the process ID number next to each process line, e.g. "(pid 1234)". Off by default to keep the list cleaner.')
         ));
 
-        // --- Yenileme hızı ---
+        // --- Refresh Rate ---
         const refreshGroup = new Adw.PreferencesGroup({
             title: _('Refresh Rate'),
         });
@@ -76,7 +76,7 @@ export default class SysMonitorPreferences extends ExtensionPreferences {
         settings.bind('poll-interval', pollRow, 'value', Gio.SettingsBindFlags.DEFAULT);
         refreshGroup.add(pollRow);
 
-        // --- Hakkında ---
+        // --- About ---
         const aboutGroup = new Adw.PreferencesGroup({
             title: _('About'),
         });

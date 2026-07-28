@@ -1,7 +1,7 @@
 {
   "uuid": "resourcewatch@gulistanduman.github.io",
   "name": "Resource Watch",
-  "description": "Panelden çıkmadan CPU, RAM ve process-level sistem kullanımını izle.",
+  "description": "Monitor CPU, RAM, and process-level system usage directly from the panel.",
   "shell-version": ["45", "46", "47", "48", "49", "50"],
   "url": "https://github.com/GulistanDuman/resourcewatch",
   "version-name": "1.0.0",

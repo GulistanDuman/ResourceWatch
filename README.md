@@ -9,6 +9,8 @@ A GNOME Shell extension that monitors CPU, GPU, RAM, temperature, and process-le
 
 
 
+
+
 <img width="306" height="894" alt="resim" src="https://github.com/user-attachments/assets/b2de7bae-87c8-4a10-8e28-c041580ce144" />
 
 

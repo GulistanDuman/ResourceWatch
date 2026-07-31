@@ -2,31 +2,26 @@
 
 A GNOME Shell extension that monitors CPU, GPU, RAM, temperature, and process-level system usage directly from the panel.
 
+## Screenshots
 
+**Panel indicator**
 
+<img width="393" height="30" alt="Resource Watch panel view" src="https://github.com/user-attachments/assets/35aeecf2-4af5-4206-ab34-ebe0b3040378" />
 
+**Dropdown menu &nbsp;/&nbsp; Preferences window**
 
-
-
-
-<img width="306" height="894" alt="resim" src="https://github.com/user-attachments/assets/b2de7bae-87c8-4a10-8e28-c041580ce144" />
-
-
-
-
-<img width="393" height="30" alt="resim" src="https://github.com/user-attachments/assets/35aeecf2-4af5-4206-ab34-ebe0b3040378" />
-
-
-
-
-<img width="619" height="961" alt="resim" src="https://github.com/user-attachments/assets/56d770c2-e5e7-4c8a-8e8d-3a26b99a54b2" />
-
+<table>
+  <tr>
+    <td><img width="330" alt="Resource Watch dropdown menu" src="https://github.com/user-attachments/assets/b2de7bae-87c8-4a10-8e28-c041580ce144" /></td>
+    <td><img width="330" alt="Resource Watch preferences window" src="https://github.com/user-attachments/assets/56d770c2-e5e7-4c8a-8e8d-3a26b99a54b2" /></td>
+  </tr>
+</table>
 
 ## Features
 
 * Live CPU% / RAM% / temperature indicator on the panel, separated by icons
 * Sparkline graph showing CPU history
-* Threshold-based coloring (normal $\rightarrow$ warning yellow $\rightarrow$ critical red)
+* Threshold-based coloring (normal → warning yellow → critical red)
 * List of top CPU/RAM-consuming processes in the dropdown menu
 * Warnings for stuck (D) and zombie (Z) processes
 * Adjustable panel appearance and refresh rate (Preferences window)
@@ -46,14 +41,12 @@ glib-compile-schemas ~/.local/share/gnome-shell/extensions/resourcewatch@gulista
 
 # 4. Enable the extension
 gnome-extensions enable resourcewatch@gulistanduman.github.io
-
 ```
 
 ## Debugging
 
 ```bash
 journalctl -f -o cat /usr/bin/gnome-shell
-
 ```
 
 ## Project Structure

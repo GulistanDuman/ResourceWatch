@@ -2,6 +2,15 @@
 
 A GNOME Shell extension that monitors CPU, GPU, RAM, temperature, and process-level system usage directly from the panel.
 
+<img width="306" height="894" alt="resim" src="https://github.com/user-attachments/assets/b2de7bae-87c8-4a10-8e28-c041580ce144" />
+
+
+<img width="393" height="30" alt="resim" src="https://github.com/user-attachments/assets/35aeecf2-4af5-4206-ab34-ebe0b3040378" />
+
+
+<img width="619" height="961" alt="resim" src="https://github.com/user-attachments/assets/56d770c2-e5e7-4c8a-8e8d-3a26b99a54b2" />
+
+
 ## Features
 
 * Live CPU% / RAM% / temperature indicator on the panel, separated by icons

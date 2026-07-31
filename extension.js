@@ -430,7 +430,13 @@ class SysMonitorIndicator extends PanelMenu.Button {
             const [r, g, b] = hexToRgb01(severityColor);
             cr.setSourceRGBA(r, g, b, 0.9);
         } else {
-            cr.setSourceRGBA(1, 1, 1, 0.7);
+            const themeColor = area.get_theme_node().get_foreground_color();
+            cr.setSourceRGBA(
+                themeColor.red / 255,
+                themeColor.green / 255,
+                themeColor.blue / 255,
+                0.7
+            );
         }
         cr.setLineWidth(1.2);
 

@@ -1,5 +1,8 @@
 # Changelog
-
+## [1.0.1] - 2026-07-31
+### Fixed
+- Sparkline now uses the theme's actual foreground color instead of
+  hardcoded white, improving readability on light GNOME themes
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

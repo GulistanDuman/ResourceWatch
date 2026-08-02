@@ -4,7 +4,7 @@
   "description": "Monitor CPU, RAM, and process-level system usage directly from the panel.",
   "shell-version": ["45", "46", "47", "48", "49", "50"],
   "url": "https://github.com/GulistanDuman/resourcewatch",
-  "version-name": "1.0.1",
+  "version-name": "1.1.0",
   "settings-schema": "org.gnome.shell.extensions.resourcewatch",
   "gettext-domain": "resourcewatch"
 }

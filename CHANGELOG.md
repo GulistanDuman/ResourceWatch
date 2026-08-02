@@ -1,3 +1,9 @@
+## [1.1.0] - 2026-08-03
+### Added
+- Manual panel color mode (Auto/Light/Dark) — overrides the theme-following
+  color for the panel badge, sparkline, and dropdown menu
+- User-selectable UI language (Auto/English/Türkçe), independent of the
+  system locale
 # Changelog
 ## [1.0.1] - 2026-07-31
 ### Fixed

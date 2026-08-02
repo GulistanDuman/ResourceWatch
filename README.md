@@ -66,7 +66,6 @@ resourcewatch@gulistanduman.github.io/
     org.gnome.shell.extensions.resourcewatch.gschema.xml
 
 ```
-
 ## License / Contribution
 
-No commercial concerns — developed as an open-source project open to contributions.
+Licensed under the [MIT License](LICENSE) — free and open source, contributions welcome.

@@ -1,0 +1,253 @@
+# Turkish translation for Resource Watch.
+# Copyright (C) 2026
+# This file is distributed under the same license as the resourcewatch package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: resourcewatch\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-03 01:03+0300\n"
+"PO-Revision-Date: 2026-08-03 01:03+0300\n"
+"Last-Translator: Gulistan Duman\n"
+"Language-Team: Turkish\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: extension.js:106
+msgid "CPU: —"
+msgstr "CPU: —"
+
+#: extension.js:107
+msgid "RAM: —"
+msgstr "RAM: —"
+
+#: extension.js:108
+msgid "CPU Temperature: —"
+msgstr "CPU Sıcaklığı: —"
+
+#: extension.js:109
+msgid "GPU Usage: —"
+msgstr "GPU Kullanımı: —"
+
+#: extension.js:110
+msgid "GPU Temperature: —"
+msgstr "GPU Sıcaklığı: —"
+
+#: extension.js:111
+msgid "Network ↓: —"
+msgstr "Ağ ↓: —"
+
+#: extension.js:112
+msgid "Network ↑: —"
+msgstr "Ağ ↑: —"
+
+#: extension.js:136 extension.js:402
+msgid "⚠ No stuck or zombie processes"
+msgstr "⚠ Takılı veya zombie process yok"
+
+#: extension.js:142
+msgid "Top RAM-consuming processes"
+msgstr "En çok RAM kullanan process'ler"
+
+#: extension.js:153
+msgid "Top CPU-consuming processes"
+msgstr "En çok CPU kullanan process'ler"
+
+#: extension.js:162
+msgid "Settings…"
+msgstr "Ayarlar…"
+
+#: extension.js:408
+msgid "⚠ Attention:"
+msgstr "⚠ Dikkat:"
+
+#: extension.js:450
+msgid "CPU:"
+msgstr "CPU:"
+
+#: extension.js:453 extension.js:454
+msgid "RAM:"
+msgstr "RAM:"
+
+#: extension.js:458
+msgid "CPU Temperature:"
+msgstr "CPU Sıcaklığı:"
+
+#: extension.js:459
+msgid "CPU Temperature: not available on this system"
+msgstr "CPU Sıcaklığı: bu sistemde okunamıyor"
+
+#: extension.js:463
+msgid "GPU Usage:"
+msgstr "GPU Kullanımı:"
+
+#: extension.js:464
+msgid "GPU Usage: not available on this system"
+msgstr "GPU Kullanımı: bu sistemde okunamıyor"
+
+#: extension.js:468
+msgid "GPU Temperature:"
+msgstr "GPU Sıcaklığı:"
+
+#: extension.js:469
+msgid "GPU Temperature: not available on this system"
+msgstr "GPU Sıcaklığı: bu sistemde okunamıyor"
+
+#: extension.js:477
+msgid "Network ↓:"
+msgstr "Ağ ↓:"
+
+#: extension.js:478
+msgid "Network ↑:"
+msgstr "Ağ ↑:"
+
+#: prefs.js:14
+msgid "General"
+msgstr "Genel"
+
+#: prefs.js:21
+msgid "Panel Display"
+msgstr "Panel Görünümü"
+
+#: prefs.js:22
+msgid "Choose which metrics appear in the top panel"
+msgstr "Üst panelde hangi metriklerin görüneceğini seçin"
+
+#: prefs.js:26
+msgid "Show CPU usage"
+msgstr "CPU kullanımını göster"
+
+#: prefs.js:27
+msgid "Show RAM usage"
+msgstr "RAM kullanımını göster"
+
+#: prefs.js:28
+msgid "Show CPU sparkline graph"
+msgstr "CPU sparkline grafiğini göster"
+
+#: prefs.js:31
+msgid "Show CPU temperature"
+msgstr "CPU sıcaklığını göster"
+
+#: prefs.js:32
+msgid "Hidden automatically if no sensor is found on this system"
+msgstr "Bu sistemde sensör bulunamazsa otomatik olarak gizlenir"
+
+#: prefs.js:36
+msgid "Show GPU usage and temperature"
+msgstr "GPU kullanımı ve sıcaklığını göster"
+
+#: prefs.js:37
+msgid ""
+"Supports AMD/Radeon/Nouveau directly; NVIDIA via nvidia-smi if installed. "
+"Hidden automatically if unavailable."
+msgstr ""
+"AMD/Radeon/Nouveau'yu doğrudan destekler; NVIDIA için kuruluysa nvidia-smi "
+"kullanılır. Kullanılamıyorsa otomatik olarak gizlenir."
+
+#: prefs.js:41
+msgid "Show network activity"
+msgstr "Ağ etkinliğini göster"
+
+#: prefs.js:42
+msgid ""
+"Combined download/upload speed across all network interfaces (excluding "
+"loopback)"
+msgstr ""
+"Loopback hariç tüm ağ arayüzlerinin toplam indirme/yükleme hızı"
+
+#: prefs.js:47
+msgid "Appearance"
+msgstr "Görünüm"
+
+#: prefs.js:48
+msgid "Control the color of panel text and the sparkline graph"
+msgstr "Panel metninin ve sparkline grafiğinin rengini kontrol edin"
+
+#: prefs.js:56
+msgid "Process List"
+msgstr "Process Listesi"
+
+#: prefs.js:62
+msgid "Show process list in dropdown"
+msgstr "Dropdown menüde process listesini göster"
+
+#: prefs.js:63
+msgid ""
+"Top CPU/RAM consumers and stuck/zombie warnings. Disabling this also stops "
+"process scanning entirely, saving a small amount of resources."
+msgstr ""
+"En çok CPU/RAM tüketenler ile takılı/zombie uyarıları. Bunu kapatmak "
+"process taramasını tamamen durdurur, küçük bir kaynak tasarrufu sağlar."
+
+#: prefs.js:68
+msgid "Show process ID (PID)"
+msgstr "Process ID'sini (PID) göster"
+
+#: prefs.js:69
+msgid ""
+"Adds the process ID number next to each process line, e.g. \"(pid 1234)\". "
+"Off by default to keep the list cleaner."
+msgstr ""
+"Her process satırının yanına PID numarasını ekler, örn. \"(pid 1234)\". "
+"Listeyi sade tutmak için varsayılan olarak kapalıdır."
+
+#: prefs.js:74
+msgid "Refresh Rate"
+msgstr "Yenileme Hızı"
+
+#: prefs.js:79
+msgid "Poll interval (seconds)"
+msgstr "Yenileme aralığı (saniye)"
+
+#: prefs.js:80
+msgid ""
+"How often CPU, RAM, and temperature values are refreshed. Lower values are "
+"more up to date but use slightly more resources."
+msgstr ""
+"CPU, RAM ve sıcaklık değerlerinin ne sıklıkla yenileneceği. Düşük değerler "
+"daha güncel bilgi verir ama biraz daha fazla kaynak kullanır."
+
+#: prefs.js:92
+msgid "About"
+msgstr "Hakkında"
+
+#: prefs.js:97
+msgid "Process list refresh"
+msgstr "Process listesi yenileme"
+
+#: prefs.js:98
+msgid ""
+"The process list (top CPU/RAM consumers, stuck/zombie processes) refreshes "
+"every 5 seconds and is not affected by the setting above, since scanning all "
+"processes is more expensive than reading global CPU/RAM totals."
+msgstr ""
+"Process listesi (en çok CPU/RAM tüketenler, takılı/zombie process'ler) her "
+"5 saniyede bir yenilenir ve yukarıdaki ayardan etkilenmez, çünkü tüm "
+"process'leri taramak genel CPU/RAM toplamlarını okumaktan daha maliyetlidir."
+
+#: prefs.js:118
+msgid "Panel color mode"
+msgstr "Panel renk modu"
+
+#: prefs.js:119
+msgid ""
+"\"Auto\" follows the system light/dark theme automatically. \"Light\" and "
+"\"Dark\" force a fixed color regardless of the current theme."
+msgstr ""
+"\"Auto\" sistemin açık/koyu temasını otomatik olarak takip eder. \"Light\" "
+"ve \"Dark\" mevcut temadan bağımsız olarak sabit bir renk zorlar."
+
+#: prefs.js:121
+msgid "Auto (follow system)"
+msgstr "Otomatik (sistemi takip et)"
+
+#: prefs.js:121
+msgid "Light"
+msgstr "Açık"
+
+#: prefs.js:121
+msgid "Dark"
+msgstr "Koyu"

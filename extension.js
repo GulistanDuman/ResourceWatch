@@ -3,7 +3,7 @@ import St from 'gi://St';
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 
-import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
+import { Extension, gettext as _systemGettext } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
@@ -15,6 +15,7 @@ import { readAllProcesses, ProcessCpuTracker, topByRam, topByCpu, attentionProce
 import { readGpuTemperature, readGpuUsagePercent, readNvidiaStatsAsync } from './lib/gpu.js';
 import { NetworkUsageTracker, formatBytesPerSec } from './lib/network.js';
 import { severityFor, colorForSeverity } from './lib/thresholds.js';
+import { TR_STRINGS } from './lib/translations.js';
 
 const PROCESS_POLL_INTERVAL_SECONDS = 5; // process scanning is more expensive than CPU/RAM, done less frequently
 const GPU_POLL_INTERVAL_SECONDS = 5; // less frequent than CPU/RAM since nvidia-smi spawns a subprocess
@@ -22,6 +23,11 @@ const PROCESS_LIST_LENGTH = 5;
 const SPARKLINE_HISTORY_LENGTH = 30;
 const SPARKLINE_WIDTH = 60;
 const SPARKLINE_HEIGHT = 20;
+
+// Fixed colors used when the user manually forces 'light' or 'dark' panel color mode
+// instead of following the system theme automatically.
+const MANUAL_LIGHT_MODE_COLOR = '#241f31'; // dark text, readable on light panel backgrounds
+const MANUAL_DARK_MODE_COLOR = '#ffffff'; // light text, readable on dark panel backgrounds
 
 /** Converts a color in '#rrggbb' format to a Cairo-compatible [r,g,b] array in the 0-1 range */
 function hexToRgb01(hex) {
@@ -98,13 +104,13 @@ class SysMonitorIndicator extends PanelMenu.Button {
         this.add_child(this._box);
 
         // --- Dropdown menu ---
-        this._cpuMenuItem = new PopupMenu.PopupMenuItem(_('CPU: —'), { reactive: false });
-        this._ramMenuItem = new PopupMenu.PopupMenuItem(_('RAM: —'), { reactive: false });
-        this._temperatureMenuItem = new PopupMenu.PopupMenuItem(_('CPU Temperature: —'), { reactive: false });
-        this._gpuUsageMenuItem = new PopupMenu.PopupMenuItem(_('GPU Usage: —'), { reactive: false });
-        this._gpuTempMenuItem = new PopupMenu.PopupMenuItem(_('GPU Temperature: —'), { reactive: false });
-        this._networkDownMenuItem = new PopupMenu.PopupMenuItem(_('Network ↓: —'), { reactive: false });
-        this._networkUpMenuItem = new PopupMenu.PopupMenuItem(_('Network ↑: —'), { reactive: false });
+        this._cpuMenuItem = new PopupMenu.PopupMenuItem(this._t('CPU: —'), { reactive: false });
+        this._ramMenuItem = new PopupMenu.PopupMenuItem(this._t('RAM: —'), { reactive: false });
+        this._temperatureMenuItem = new PopupMenu.PopupMenuItem(this._t('CPU Temperature: —'), { reactive: false });
+        this._gpuUsageMenuItem = new PopupMenu.PopupMenuItem(this._t('GPU Usage: —'), { reactive: false });
+        this._gpuTempMenuItem = new PopupMenu.PopupMenuItem(this._t('GPU Temperature: —'), { reactive: false });
+        this._networkDownMenuItem = new PopupMenu.PopupMenuItem(this._t('Network ↓: —'), { reactive: false });
+        this._networkUpMenuItem = new PopupMenu.PopupMenuItem(this._t('Network ↑: —'), { reactive: false });
         this.menu.addMenuItem(this._cpuMenuItem);
         this.menu.addMenuItem(this._ramMenuItem);
         this.menu.addMenuItem(this._temperatureMenuItem);
@@ -128,13 +134,13 @@ class SysMonitorIndicator extends PanelMenu.Button {
 
         // Processes requiring attention (D: waiting for disk / Z: zombie)
         this._attentionHeader = addProcessItem(new PopupMenu.PopupMenuItem(
-            _('⚠ No stuck or zombie processes'), { reactive: false }));
+            this._t('⚠ No stuck or zombie processes'), { reactive: false }));
 
         addProcessItem(new PopupMenu.PopupSeparatorMenuItem());
 
         // Top RAM consumers
-        addProcessItem(new PopupMenu.PopupMenuItem(
-            _('Top RAM-consuming processes'), { reactive: false, style_class: 'resourcewatch-section-title' }));
+        this._ramSectionTitleItem = addProcessItem(new PopupMenu.PopupMenuItem(
+            this._t('Top RAM-consuming processes'), { reactive: false, style_class: 'resourcewatch-section-title' }));
         this._ramProcessItems = [];
         for (let i = 0; i < PROCESS_LIST_LENGTH; i++) {
             const item = addProcessItem(new PopupMenu.PopupMenuItem('—', { reactive: false }));
@@ -144,8 +150,8 @@ class SysMonitorIndicator extends PanelMenu.Button {
         addProcessItem(new PopupMenu.PopupSeparatorMenuItem());
 
         // Top CPU consumers
-        addProcessItem(new PopupMenu.PopupMenuItem(
-            _('Top CPU-consuming processes'), { reactive: false, style_class: 'resourcewatch-section-title' }));
+        this._cpuSectionTitleItem = addProcessItem(new PopupMenu.PopupMenuItem(
+            this._t('Top CPU-consuming processes'), { reactive: false, style_class: 'resourcewatch-section-title' }));
         this._cpuProcessItems = [];
         for (let i = 0; i < PROCESS_LIST_LENGTH; i++) {
             const item = addProcessItem(new PopupMenu.PopupMenuItem('—', { reactive: false }));
@@ -154,9 +160,18 @@ class SysMonitorIndicator extends PanelMenu.Button {
 
         // --- Settings button ---
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        const settingsItem = new PopupMenu.PopupMenuItem(_('Settings…'));
-        settingsItem.connect('activate', () => this._openPreferences());
-        this.menu.addMenuItem(settingsItem);
+        this._settingsItem = new PopupMenu.PopupMenuItem(this._t('Settings…'));
+        this._settingsItem.connect('activate', () => this._openPreferences());
+        this.menu.addMenuItem(this._settingsItem);
+
+        // All the top-level (non-process-list) menu items whose text color
+        // should follow panel-color-mode, collected for _applyMenuColorMode()
+        this._menuTextItems = [
+            this._cpuMenuItem, this._ramMenuItem, this._temperatureMenuItem,
+            this._gpuUsageMenuItem, this._gpuTempMenuItem,
+            this._networkDownMenuItem, this._networkUpMenuItem,
+            this._settingsItem,
+        ];
 
         this._timeoutId = null;
         this._processTimeoutId = null;
@@ -176,6 +191,8 @@ class SysMonitorIndicator extends PanelMenu.Button {
     }
 
     _applyDisplaySettings() {
+        this._applyLanguage(); // static (once-created) menu texts need explicit refresh on language change
+
         this._showCpu = this._settings.get_boolean('show-cpu');
         this._showRam = this._settings.get_boolean('show-ram');
         this._showSparkline = this._settings.get_boolean('show-sparkline');
@@ -184,6 +201,7 @@ class SysMonitorIndicator extends PanelMenu.Button {
         this._showProcessPid = this._settings.get_boolean('show-process-pid');
         this._showGpu = this._settings.get_boolean('show-gpu');
         this._showNetwork = this._settings.get_boolean('show-network');
+        this._panelColorMode = this._settings.get_string('panel-color-mode');
 
         this._sparkline.visible = this._showSparkline;
         this._cpuLabel.visible = this._showCpu;
@@ -211,6 +229,78 @@ class SysMonitorIndicator extends PanelMenu.Button {
             this._stopGpuPolling();
 
         this._refreshLabel();
+        this._sparkline.queue_repaint(); // color mode may have changed, redraw with new color
+        this._applyPanelColorMode(); // updates the panel badge background
+        this._applyMenuColorMode(); // updates the dropdown menu background and text
+    }
+
+    /**
+     * Applies (or removes) a background "badge" behind the panel content,
+     * based on the panel-color-mode setting. 'auto' removes any inline
+     * background so the widget stays transparent, matching the panel's
+     * own look. 'light'/'dark' draw a fixed-color pill background so the
+     * change is visually obvious regardless of the system theme.
+     */
+    /**
+     * Translates a string based on the user-selected 'ui-language' setting,
+     * independent of the system locale:
+     * - 'auto' → falls back to standard gettext (follows $LANG as before)
+     * - 'en'   → returns the original English string unchanged
+     * - 'tr'   → looks up the string in the bundled Turkish dictionary
+     */
+    _t(str) {
+        const lang = this._settings.get_string('ui-language');
+        if (lang === 'en')
+            return str;
+        if (lang === 'tr')
+            return TR_STRINGS[str] ?? str;
+        return _systemGettext(str);
+    }
+
+    /** Re-applies translation to menu texts that are only set once at creation time */
+    _applyLanguage() {
+        this._ramSectionTitleItem.label.set_text(this._t('Top RAM-consuming processes'));
+        this._cpuSectionTitleItem.label.set_text(this._t('Top CPU-consuming processes'));
+        this._settingsItem.label.set_text(this._t('Settings…'));
+    }
+
+    _applyPanelColorMode() {
+        if (this._panelColorMode === 'light') {
+            this._box.set_style('background-color: #e0e0e0; border-radius: 12px; padding: 2px 8px;');
+        } else if (this._panelColorMode === 'dark') {
+            this._box.set_style('background-color: #1e1e1e; border-radius: 12px; padding: 2px 8px;');
+        } else {
+            this._box.set_style(null);
+        }
+    }
+
+    /**
+     * Applies (or removes) a background color and text color to the
+     * dropdown menu, based on panel-color-mode. Note: the outer arrow/
+     * border chrome of the popup is drawn by GNOME Shell's own boxpointer
+     * widget and stays theme-controlled — only the inner content area
+     * (background + text) is overridden here.
+     */
+    _applyMenuColorMode() {
+        let bgColor = null;
+        let textColor = null;
+
+        if (this._panelColorMode === 'light') {
+            bgColor = '#f5f5f5';
+            textColor = '#241f31';
+        } else if (this._panelColorMode === 'dark') {
+            bgColor = '#1e1e1e';
+            textColor = '#ffffff';
+        }
+
+        this.menu.box.set_style(bgColor ? `background-color: ${bgColor};` : null);
+
+        const allItems = [...this._menuTextItems, ...this._processMenuItems];
+        for (const item of allItems) {
+            if (!item.label)
+                continue;
+            item.label.set_style(textColor ? `color: ${textColor};` : null);
+        }
     }
 
     _startPolling() {
@@ -335,13 +425,13 @@ class SysMonitorIndicator extends PanelMenu.Button {
 
         const attention = attentionProcesses(processes);
         if (attention.length === 0) {
-            this._attentionHeader.label.set_text(_('⚠ No stuck or zombie processes'));
+            this._attentionHeader.label.set_text(this._t('⚠ No stuck or zombie processes'));
         } else {
             const summary = attention
                 .slice(0, 3)
                 .map(p => `${p.name} (${PROCESS_STATE_LABELS[p.state] ?? p.state}${this._showProcessPid ? `, pid ${p.pid}` : ''})`)
                 .join(', ');
-            this._attentionHeader.label.set_text(`${_('⚠ Attention:')} ${summary}`);
+            this._attentionHeader.label.set_text(`${this._t('⚠ Attention:')} ${summary}`);
         }
     }
 
@@ -383,26 +473,26 @@ class SysMonitorIndicator extends PanelMenu.Button {
             severityFor('gpuUsage', this._gpuUsage),
             severityFor('gpuTemperature', this._gpuTemperature)));
 
-        this._cpuMenuItem.label.set_text(`${_('CPU:')} ${cpuText}`);
+        this._cpuMenuItem.label.set_text(`${this._t('CPU:')} ${cpuText}`);
         this._ramMenuItem.label.set_text(
             this._memInfo != null
-                ? `${_('RAM:')} ${ramText} (${(this._memInfo.usedKb / 1024 / 1024).toFixed(1)} GB / ${(this._memInfo.totalKb / 1024 / 1024).toFixed(1)} GB)`
-                : `${_('RAM:')} —`
+                ? `${this._t('RAM:')} ${ramText} (${(this._memInfo.usedKb / 1024 / 1024).toFixed(1)} GB / ${(this._memInfo.totalKb / 1024 / 1024).toFixed(1)} GB)`
+                : `${this._t('RAM:')} —`
         );
         this._temperatureMenuItem.label.set_text(
             this._temperature != null
-                ? `${_('CPU Temperature:')} ${Math.round(this._temperature)}°C`
-                : _('CPU Temperature: not available on this system')
+                ? `${this._t('CPU Temperature:')} ${Math.round(this._temperature)}°C`
+                : this._t('CPU Temperature: not available on this system')
         );
         this._gpuUsageMenuItem.label.set_text(
             gpuUsageText !== null
-                ? `${_('GPU Usage:')} ${gpuUsageText}`
-                : _('GPU Usage: not available on this system')
+                ? `${this._t('GPU Usage:')} ${gpuUsageText}`
+                : this._t('GPU Usage: not available on this system')
         );
         this._gpuTempMenuItem.label.set_text(
             gpuTempText !== null
-                ? `${_('GPU Temperature:')} ${gpuTempText}`
-                : _('GPU Temperature: not available on this system')
+                ? `${this._t('GPU Temperature:')} ${gpuTempText}`
+                : this._t('GPU Temperature: not available on this system')
         );
 
         const downText = this._network != null ? formatBytesPerSec(this._network.downBytesPerSec) : null;
@@ -410,14 +500,29 @@ class SysMonitorIndicator extends PanelMenu.Button {
         this._networkLabel.set_text(
             this._network != null ? `🌐 ↓${downText} ↑${upText}` : '🌐 —'
         );
-        this._networkDownMenuItem.label.set_text(`${_('Network ↓:')} ${downText ?? '—'}`);
-        this._networkUpMenuItem.label.set_text(`${_('Network ↑:')} ${upText ?? '—'}`);
+        this._networkDownMenuItem.label.set_text(`${this._t('Network ↓:')} ${downText ?? '—'}`);
+        this._networkUpMenuItem.label.set_text(`${this._t('Network ↑:')} ${upText ?? '—'}`);
     }
 
-    /** Applies color to the label based on the threshold status (reverts to theme color in normal state) */
+    /** Returns a fixed override color for 'light'/'dark' modes, or null for 'auto' (theme-following) */
+    _getManualColorOverride() {
+        if (this._panelColorMode === 'light')
+            return MANUAL_LIGHT_MODE_COLOR;
+        if (this._panelColorMode === 'dark')
+            return MANUAL_DARK_MODE_COLOR;
+        return null; // 'auto' — let the theme decide
+    }
+
+    /** Applies color to the label based on the threshold status (falls back to manual mode or theme color in normal state) */
     _applySeverityColor(label, severity) {
-        const color = colorForSeverity(severity);
-        label.set_style(color ? `color: ${color}; font-weight: bold;` : null);
+        const severityColorValue = colorForSeverity(severity);
+        if (severityColorValue) {
+            label.set_style(`color: ${severityColorValue}; font-weight: bold;`);
+            return;
+        }
+
+        const manualColor = this._getManualColorOverride();
+        label.set_style(manualColor ? `color: ${manualColor};` : null);
     }
 
     _drawSparkline(area) {
@@ -430,13 +535,19 @@ class SysMonitorIndicator extends PanelMenu.Button {
             const [r, g, b] = hexToRgb01(severityColor);
             cr.setSourceRGBA(r, g, b, 0.9);
         } else {
-            const themeColor = area.get_theme_node().get_foreground_color();
-            cr.setSourceRGBA(
-                themeColor.red / 255,
-                themeColor.green / 255,
-                themeColor.blue / 255,
-                0.7
-            );
+            const manualColor = this._getManualColorOverride();
+            if (manualColor) {
+                const [r, g, b] = hexToRgb01(manualColor);
+                cr.setSourceRGBA(r, g, b, 0.7);
+            } else {
+                const themeColor = area.get_theme_node().get_foreground_color();
+                cr.setSourceRGBA(
+                    themeColor.red / 255,
+                    themeColor.green / 255,
+                    themeColor.blue / 255,
+                    0.7
+                );
+            }
         }
         cr.setLineWidth(1.2);
 
@@ -483,6 +594,7 @@ class SysMonitorIndicator extends PanelMenu.Button {
 
 export default class SysMonitorExtension extends Extension {
     enable() {
+        this.initTranslations(); // loads .mo files from locale/ so gettext strings render in the user's language
         const settings = this.getSettings();
         this._indicator = new SysMonitorIndicator(settings, () => this.openPreferences());
         Main.panel.addToStatusArea(this.uuid, this._indicator);

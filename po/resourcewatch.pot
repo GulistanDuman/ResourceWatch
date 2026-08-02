@@ -1,0 +1,241 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-03 01:03+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: extension.js:106
+msgid "CPU: —"
+msgstr ""
+
+#: extension.js:107
+msgid "RAM: —"
+msgstr ""
+
+#: extension.js:108
+msgid "CPU Temperature: —"
+msgstr ""
+
+#: extension.js:109
+msgid "GPU Usage: —"
+msgstr ""
+
+#: extension.js:110
+msgid "GPU Temperature: —"
+msgstr ""
+
+#: extension.js:111
+msgid "Network ↓: —"
+msgstr ""
+
+#: extension.js:112
+msgid "Network ↑: —"
+msgstr ""
+
+#: extension.js:136 extension.js:402
+msgid "⚠ No stuck or zombie processes"
+msgstr ""
+
+#: extension.js:142
+msgid "Top RAM-consuming processes"
+msgstr ""
+
+#: extension.js:153
+msgid "Top CPU-consuming processes"
+msgstr ""
+
+#: extension.js:162
+msgid "Settings…"
+msgstr ""
+
+#: extension.js:408
+msgid "⚠ Attention:"
+msgstr ""
+
+#: extension.js:450
+msgid "CPU:"
+msgstr ""
+
+#: extension.js:453 extension.js:454
+msgid "RAM:"
+msgstr ""
+
+#: extension.js:458
+msgid "CPU Temperature:"
+msgstr ""
+
+#: extension.js:459
+msgid "CPU Temperature: not available on this system"
+msgstr ""
+
+#: extension.js:463
+msgid "GPU Usage:"
+msgstr ""
+
+#: extension.js:464
+msgid "GPU Usage: not available on this system"
+msgstr ""
+
+#: extension.js:468
+msgid "GPU Temperature:"
+msgstr ""
+
+#: extension.js:469
+msgid "GPU Temperature: not available on this system"
+msgstr ""
+
+#: extension.js:477
+msgid "Network ↓:"
+msgstr ""
+
+#: extension.js:478
+msgid "Network ↑:"
+msgstr ""
+
+#: prefs.js:14
+msgid "General"
+msgstr ""
+
+#: prefs.js:21
+msgid "Panel Display"
+msgstr ""
+
+#: prefs.js:22
+msgid "Choose which metrics appear in the top panel"
+msgstr ""
+
+#: prefs.js:26
+msgid "Show CPU usage"
+msgstr ""
+
+#: prefs.js:27
+msgid "Show RAM usage"
+msgstr ""
+
+#: prefs.js:28
+msgid "Show CPU sparkline graph"
+msgstr ""
+
+#: prefs.js:31
+msgid "Show CPU temperature"
+msgstr ""
+
+#: prefs.js:32
+msgid "Hidden automatically if no sensor is found on this system"
+msgstr ""
+
+#: prefs.js:36
+msgid "Show GPU usage and temperature"
+msgstr ""
+
+#: prefs.js:37
+msgid ""
+"Supports AMD/Radeon/Nouveau directly; NVIDIA via nvidia-smi if installed. "
+"Hidden automatically if unavailable."
+msgstr ""
+
+#: prefs.js:41
+msgid "Show network activity"
+msgstr ""
+
+#: prefs.js:42
+msgid ""
+"Combined download/upload speed across all network interfaces (excluding "
+"loopback)"
+msgstr ""
+
+#: prefs.js:47
+msgid "Appearance"
+msgstr ""
+
+#: prefs.js:48
+msgid "Control the color of panel text and the sparkline graph"
+msgstr ""
+
+#: prefs.js:56
+msgid "Process List"
+msgstr ""
+
+#: prefs.js:62
+msgid "Show process list in dropdown"
+msgstr ""
+
+#: prefs.js:63
+msgid ""
+"Top CPU/RAM consumers and stuck/zombie warnings. Disabling this also stops "
+"process scanning entirely, saving a small amount of resources."
+msgstr ""
+
+#: prefs.js:68
+msgid "Show process ID (PID)"
+msgstr ""
+
+#: prefs.js:69
+msgid ""
+"Adds the process ID number next to each process line, e.g. \"(pid 1234)\". "
+"Off by default to keep the list cleaner."
+msgstr ""
+
+#: prefs.js:74
+msgid "Refresh Rate"
+msgstr ""
+
+#: prefs.js:79
+msgid "Poll interval (seconds)"
+msgstr ""
+
+#: prefs.js:80
+msgid ""
+"How often CPU, RAM, and temperature values are refreshed. Lower values are "
+"more up to date but use slightly more resources."
+msgstr ""
+
+#: prefs.js:92
+msgid "About"
+msgstr ""
+
+#: prefs.js:97
+msgid "Process list refresh"
+msgstr ""
+
+#: prefs.js:98
+msgid ""
+"The process list (top CPU/RAM consumers, stuck/zombie processes) refreshes "
+"every 5 seconds and is not affected by the setting above, since scanning all "
+"processes is more expensive than reading global CPU/RAM totals."
+msgstr ""
+
+#: prefs.js:118
+msgid "Panel color mode"
+msgstr ""
+
+#: prefs.js:119
+msgid ""
+"\"Auto\" follows the system light/dark theme automatically. \"Light\" and "
+"\"Dark\" force a fixed color regardless of the current theme."
+msgstr ""
+
+#: prefs.js:121
+msgid "Auto (follow system)"
+msgstr ""
+
+#: prefs.js:121
+msgid "Light"
+msgstr ""
+
+#: prefs.js:121
+msgid "Dark"
+msgstr ""

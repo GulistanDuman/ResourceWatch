@@ -1,3 +1,9 @@
+## [1.2.0] - 2026-08-03
+### Added
+- Five more UI languages: German, Spanish, French, Russian, Portuguese
+- Dropdown menu redesigned with card-style grouping and per-row icons
+- Preferences window: icons, merged groups, and color scheme now
+  follows the panel color mode setting
 ## [1.1.0] - 2026-08-03
 ### Added
 - Manual panel color mode (Auto/Light/Dark) — overrides the theme-following

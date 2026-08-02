@@ -71,9 +71,14 @@
         <choice value='auto'/>
         <choice value='en'/>
         <choice value='tr'/>
+        <choice value='de'/>
+        <choice value='es'/>
+        <choice value='fr'/>
+        <choice value='ru'/>
+        <choice value='pt'/>
       </choices>
       <summary>UI language for panel and menu text</summary>
-      <description>'auto' follows the system language ($LANG) via gettext. 'en' and 'tr' force a fixed language regardless of the system locale.</description>
+      <description>'auto' follows the system language ($LANG) via gettext. The others force a fixed language regardless of the system locale.</description>
     </key>
 
   </schema>

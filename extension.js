@@ -15,7 +15,7 @@ import { readAllProcesses, ProcessCpuTracker, topByRam, topByCpu, attentionProce
 import { readGpuTemperature, readGpuUsagePercent, readNvidiaStatsAsync } from './lib/gpu.js';
 import { NetworkUsageTracker, formatBytesPerSec } from './lib/network.js';
 import { severityFor, colorForSeverity } from './lib/thresholds.js';
-import { TR_STRINGS } from './lib/translations.js';
+import { TRANSLATIONS } from './lib/translations.js';
 
 const PROCESS_POLL_INTERVAL_SECONDS = 5; // process scanning is more expensive than CPU/RAM, done less frequently
 const GPU_POLL_INTERVAL_SECONDS = 5; // less frequent than CPU/RAM since nvidia-smi spawns a subprocess
@@ -176,6 +176,8 @@ class SysMonitorIndicator extends PanelMenu.Button {
         this._timeoutId = null;
         this._processTimeoutId = null;
 
+        this._applyCardStyling(); // subtle background blocks for process-list groups, once at construction
+
         this._settingsChangedId = this._settings.connect('changed', this._onSettingsChanged.bind(this));
         this._applyDisplaySettings();
         this._startPolling();
@@ -242,6 +244,27 @@ class SysMonitorIndicator extends PanelMenu.Button {
      * change is visually obvious regardless of the system theme.
      */
     /**
+     * Applies a subtle rounded background "card" behind each process-list
+     * group (title + its 5 rows) and light padding to individual metric
+     * rows, so the dropdown reads as distinct visual blocks instead of one
+     * flat list. Uses a low-opacity overlay so it stays readable regardless
+     * of the current panel-color-mode background.
+     */
+    _applyCardStyling() {
+        const cardStyle = 'background-color: rgba(127, 127, 127, 0.12); border-radius: 8px; margin: 2px 6px;';
+        const rowStyle = 'padding: 4px 10px;';
+
+        const ramCardItems = [this._ramSectionTitleItem, ...this._ramProcessItems];
+        const cpuCardItems = [this._cpuSectionTitleItem, ...this._cpuProcessItems];
+
+        for (const item of [...ramCardItems, ...cpuCardItems, this._attentionHeader])
+            item.set_style(cardStyle);
+
+        for (const item of this._menuTextItems)
+            item.set_style(rowStyle);
+    }
+
+    /**
      * Translates a string based on the user-selected 'ui-language' setting,
      * independent of the system locale:
      * - 'auto' → falls back to standard gettext (follows $LANG as before)
@@ -250,11 +273,11 @@ class SysMonitorIndicator extends PanelMenu.Button {
      */
     _t(str) {
         const lang = this._settings.get_string('ui-language');
+        if (lang === 'auto')
+            return _systemGettext(str);
         if (lang === 'en')
             return str;
-        if (lang === 'tr')
-            return TR_STRINGS[str] ?? str;
-        return _systemGettext(str);
+        return TRANSLATIONS[lang]?.[str] ?? str;
     }
 
     /** Re-applies translation to menu texts that are only set once at creation time */
@@ -473,26 +496,26 @@ class SysMonitorIndicator extends PanelMenu.Button {
             severityFor('gpuUsage', this._gpuUsage),
             severityFor('gpuTemperature', this._gpuTemperature)));
 
-        this._cpuMenuItem.label.set_text(`${this._t('CPU:')} ${cpuText}`);
+        this._cpuMenuItem.label.set_text(`⚙ ${this._t('CPU:')} ${cpuText}`);
         this._ramMenuItem.label.set_text(
             this._memInfo != null
-                ? `${this._t('RAM:')} ${ramText} (${(this._memInfo.usedKb / 1024 / 1024).toFixed(1)} GB / ${(this._memInfo.totalKb / 1024 / 1024).toFixed(1)} GB)`
-                : `${this._t('RAM:')} —`
+                ? `▤ ${this._t('RAM:')} ${ramText} (${(this._memInfo.usedKb / 1024 / 1024).toFixed(1)} GB / ${(this._memInfo.totalKb / 1024 / 1024).toFixed(1)} GB)`
+                : `▤ ${this._t('RAM:')} —`
         );
         this._temperatureMenuItem.label.set_text(
             this._temperature != null
-                ? `${this._t('CPU Temperature:')} ${Math.round(this._temperature)}°C`
-                : this._t('CPU Temperature: not available on this system')
+                ? `🌡 ${this._t('CPU Temperature:')} ${Math.round(this._temperature)}°C`
+                : `🌡 ${this._t('CPU Temperature: not available on this system')}`
         );
         this._gpuUsageMenuItem.label.set_text(
             gpuUsageText !== null
-                ? `${this._t('GPU Usage:')} ${gpuUsageText}`
-                : this._t('GPU Usage: not available on this system')
+                ? `🎮 ${this._t('GPU Usage:')} ${gpuUsageText}`
+                : `🎮 ${this._t('GPU Usage: not available on this system')}`
         );
         this._gpuTempMenuItem.label.set_text(
             gpuTempText !== null
-                ? `${this._t('GPU Temperature:')} ${gpuTempText}`
-                : this._t('GPU Temperature: not available on this system')
+                ? `🌡 ${this._t('GPU Temperature:')} ${gpuTempText}`
+                : `🌡 ${this._t('GPU Temperature: not available on this system')}`
         );
 
         const downText = this._network != null ? formatBytesPerSec(this._network.downBytesPerSec) : null;
@@ -500,8 +523,8 @@ class SysMonitorIndicator extends PanelMenu.Button {
         this._networkLabel.set_text(
             this._network != null ? `🌐 ↓${downText} ↑${upText}` : '🌐 —'
         );
-        this._networkDownMenuItem.label.set_text(`${this._t('Network ↓:')} ${downText ?? '—'}`);
-        this._networkUpMenuItem.label.set_text(`${this._t('Network ↑:')} ${upText ?? '—'}`);
+        this._networkDownMenuItem.label.set_text(`🌐 ${this._t('Network ↓:')} ${downText ?? '—'}`);
+        this._networkUpMenuItem.label.set_text(`🌐 ${this._t('Network ↑:')} ${upText ?? '—'}`);
     }
 
     /** Returns a fixed override color for 'light'/'dark' modes, or null for 'auto' (theme-following) */

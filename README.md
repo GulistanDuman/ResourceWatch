@@ -66,9 +66,9 @@ gnome-extensions enable resourcewatch@gulistanduman.github.io
 ```bash
 journalctl -f -o cat /usr/bin/gnome-shell
 ```
-
 ## Project Structure
 
+```
 resourcewatch@gulistanduman.github.io/
   extension.js        # main entry point, panel widget, polling
   prefs.js            # preferences window (Adwaita UI)
@@ -87,12 +87,12 @@ resourcewatch@gulistanduman.github.io/
   po/                 # gettext translation source (.po/.pot) for the
                        # "Automatic (system language)" option
   locale/              # compiled .mo files used by gettext at runtime
+```
 
-
-Supported languages
+## Supported languages
 
 Auto (system language) · English · Türkçe · Deutsch · Español · Français · Русский · Português
 
-License / Contribution
+## License / Contribution
 
-Licensed under the MIT License — free and open source, contributions welcome.
+Licensed under the [MIT License](LICENSE) — free and open source, contributions welcome.

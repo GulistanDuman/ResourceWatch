@@ -6,27 +6,43 @@ A GNOME Shell extension that monitors CPU, GPU, RAM, temperature, and process-le
 
 **Panel indicator**
 
-<img width="393" height="30" alt="Resource Watch panel view" src="https://github.com/user-attachments/assets/35aeecf2-4af5-4206-ab34-ebe0b3040378" />
+<img width="430" height="30" alt="resim" src="https://github.com/user-attachments/assets/b61405cd-1114-4d96-b663-88e924cbbda8" />
+
 
 **Dropdown menu &nbsp;/&nbsp; Preferences window**
 
 <table>
   <tr>
-    <td><img width="330" alt="Resource Watch dropdown menu" src="https://github.com/user-attachments/assets/b2de7bae-87c8-4a10-8e28-c041580ce144" /></td>
-    <td><img width="330" alt="Resource Watch preferences window" src="https://github.com/user-attachments/assets/56d770c2-e5e7-4c8a-8e8d-3a26b99a54b2" /></td>
+    <img width="309" height="818" alt="resim" src="https://github.com/user-attachments/assets/2311a089-32cb-4a2d-b39a-633a1d686604" />
+
+    <img width="309" height="818" alt="resim" src="https://github.com/user-attachments/assets/38b6dfe1-6a88-4579-8c75-963ac1460a49" />
+
+    <img width="627" height="1043" alt="resim" src="https://github.com/user-attachments/assets/5e96f167-30da-440a-9c06-477039362be1" />
+
+    <img width="627" height="1043" alt="resim" src="https://github.com/user-attachments/assets/f5084d29-1da7-46c7-a570-c90a472bf767" />
+
   </tr>
 </table>
 
 ## Features
 
 * Live CPU% / RAM% / temperature indicator on the panel, separated by icons
+* GPU usage and temperature (AMD/Radeon/Nouveau directly; NVIDIA via `nvidia-smi` if installed)
+* Network download/upload speed across all interfaces (excluding loopback)
 * Sparkline graph showing CPU history
 * Threshold-based coloring (normal → warning yellow → critical red)
-* List of top CPU/RAM-consuming processes in the dropdown menu
+* List of top CPU/RAM-consuming processes in the dropdown menu, shown as
+  distinct card-style groups
 * Warnings for stuck (D) and zombie (Z) processes
+* Optional process ID (PID) display, off by default to keep the list clean
+* Manual panel color mode (Auto / Light / Dark) — overrides the
+  theme-following color for the panel badge, sparkline, and dropdown menu;
+  the Preferences window itself follows the same setting
+* User-selectable UI language, independent of the system locale:
+  English, Türkçe, Deutsch, Español, Français, Русский, Português, or
+  Automatic (follows system language via gettext)
 * Adjustable panel appearance and refresh rate (Preferences window)
 * Reliable temperature reading prioritizing `/sys/class/hwmon` (coretemp/k10temp)
-* English interface, ready for internationalization using gettext
 
 ## Installation (for development/testing)
 
@@ -50,22 +66,3 @@ journalctl -f -o cat /usr/bin/gnome-shell
 ```
 
 ## Project Structure
-
-```
-resourcewatch@gulistanduman.github.io/
-  extension.js        # main entry point, panel widget, polling
-  prefs.js            # preferences window (Adwaita UI)
-  metadata.json       # GNOME Shell version compatibility info
-  lib/
-    cpu.js            # /proc/stat reading and calculation
-    memory.js         # /proc/meminfo
-    processes.js      # /proc/[pid]/* scanning, top CPU/RAM consumers
-    thermal.js        # hwmon + thermal_zone fallback chain
-    thresholds.js     # threshold values and color logic
-  schemas/
-    org.gnome.shell.extensions.resourcewatch.gschema.xml
-
-```
-## License / Contribution
-
-Licensed under the [MIT License](LICENSE) — free and open source, contributions welcome.

@@ -13,13 +13,13 @@ A GNOME Shell extension that monitors CPU, GPU, RAM, temperature, and process-le
 
 <table>
   <tr>
-    <img width="309" height="818" alt="resim" src="https://github.com/user-attachments/assets/2311a089-32cb-4a2d-b39a-633a1d686604" />
+    <td> <img width="309" height="818" alt="resim" src="https://github.com/user-attachments/assets/2311a089-32cb-4a2d-b39a-633a1d686604" /> </td>
 
-    <img width="309" height="818" alt="resim" src="https://github.com/user-attachments/assets/38b6dfe1-6a88-4579-8c75-963ac1460a49" />
+    <td> <img width="309" height="818" alt="resim" src="https://github.com/user-attachments/assets/38b6dfe1-6a88-4579-8c75-963ac1460a49" /> </td>
 
-    <img width="627" height="1043" alt="resim" src="https://github.com/user-attachments/assets/5e96f167-30da-440a-9c06-477039362be1" />
+    <td> <img width="627" height="1043" alt="resim" src="https://github.com/user-attachments/assets/5e96f167-30da-440a-9c06-477039362be1" /> </td>
 
-    <img width="627" height="1043" alt="resim" src="https://github.com/user-attachments/assets/f5084d29-1da7-46c7-a570-c90a472bf767" />
+    <td> <img width="627" height="1043" alt="resim" src="https://github.com/user-attachments/assets/f5084d29-1da7-46c7-a570-c90a472bf767" /> </td>
 
   </tr>
 </table>

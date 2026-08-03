@@ -68,3 +68,31 @@ journalctl -f -o cat /usr/bin/gnome-shell
 ```
 
 ## Project Structure
+
+resourcewatch@gulistanduman.github.io/
+  extension.js        # main entry point, panel widget, polling
+  prefs.js            # preferences window (Adwaita UI)
+  metadata.json       # GNOME Shell version compatibility info
+  lib/
+    cpu.js            # /proc/stat reading and calculation
+    memory.js         # /proc/meminfo
+    processes.js      # /proc/[pid]/* scanning, top CPU/RAM consumers
+    thermal.js        # hwmon + thermal_zone fallback chain
+    gpu.js            # GPU usage/temperature (sysfs + nvidia-smi fallback)
+    network.js        # /proc/net/dev reading and rate calculation
+    thresholds.js     # threshold values and color logic
+    translations.js   # manual per-language string dictionaries
+  schemas/
+    org.gnome.shell.extensions.resourcewatch.gschema.xml
+  po/                 # gettext translation source (.po/.pot) for the
+                       # "Automatic (system language)" option
+  locale/              # compiled .mo files used by gettext at runtime
+
+
+Supported languages
+
+Auto (system language) · English · Türkçe · Deutsch · Español · Français · Русский · Português
+
+License / Contribution
+
+Licensed under the MIT License — free and open source, contributions welcome.
